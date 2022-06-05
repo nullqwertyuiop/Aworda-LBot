@@ -16,7 +16,9 @@ channel = Channel.current()
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
-        inline_dispatchers=[LBotFunctionRegister("bot_manage",MasterPermission(),"干啥呢，坏蛋")],
+        inline_dispatchers=[
+            LBotFunctionRegister("bot_manage", MasterPermission(), "干啥呢，坏蛋")
+        ],
         decorators=[DetectPrefix("#broadcast")],
     )
 )

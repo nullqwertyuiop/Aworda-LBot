@@ -39,7 +39,15 @@ hitokoto_url = "https://v1.hitokoto.cn/"
 
 
 @channel.use(
-    ListenerSchema(listening_events=[GroupMessage], decorators=[MatchContent("签到")],inline_dispatchers=[LBotFunctionRegister("signin",defualt_permission=Stop(),denied_message="啊嘞，签到好像停用了捏")])
+    ListenerSchema(
+        listening_events=[GroupMessage],
+        decorators=[MatchContent("签到")],
+        inline_dispatchers=[
+            LBotFunctionRegister(
+                "signin", defualt_permission=Stop(), denied_message="啊嘞，签到好像停用了捏"
+            )
+        ],
+    )
 )
 async def sendmsg(
     app: Ariadne, msg: MessageChain, group: Group, member: Member, db: SignInInfo
@@ -59,7 +67,10 @@ async def sendmsg(
         ).insert()
     info = await SignInInfo.find(SignInInfo.user == member.id).to_list()
     info = info[0]
-    if info.last_time.day >= datetime.datetime.now().day and info.last_time.month == datetime.datetime.now().month:
+    if (
+        info.last_time.day >= datetime.datetime.now().day
+        and info.last_time.month == datetime.datetime.now().month
+    ):
         await app.sendGroupMessage(
             group, MessageChain.create([Text("噫，你今天签了到了")]), quote=message_id
         )

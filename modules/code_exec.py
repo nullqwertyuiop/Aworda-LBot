@@ -43,7 +43,10 @@ shell = Alconna(
 @channel.use(AlconnaSchema(AlconnaDispatcher(alconna=code, help_flag="reply")))
 @channel.use(
     ListenerSchema(
-        [GroupMessage, FriendMessage], inline_dispatchers=[LBotFunctionRegister("code_exec",MasterPermission(),"啊嘞，好像权限不够嘞")]
+        [GroupMessage, FriendMessage],
+        inline_dispatchers=[
+            LBotFunctionRegister("code_exec", MasterPermission(), "啊嘞，好像权限不够嘞")
+        ],
     )
 )
 async def _(
@@ -96,7 +99,9 @@ async def _(
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
-        inline_dispatchers=[LBotFunctionRegister("shell_exec",MasterPermission(),"再这样下去，霖念会生气的💧💧")],
+        inline_dispatchers=[
+            LBotFunctionRegister("shell_exec", MasterPermission(), "再这样下去，霖念会生气的💧💧")
+        ],
     )
 )
 async def _(app: Ariadne, sender: Union[Group, Friend], result: AlconnaProperty):

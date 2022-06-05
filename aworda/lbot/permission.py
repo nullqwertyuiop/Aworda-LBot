@@ -42,7 +42,6 @@ class Stop(BasePermission):
         return False
 
 
-
 class AllAllow(BasePermission):
     async def target(self, event: BaseEvent) -> bool:
         return True
