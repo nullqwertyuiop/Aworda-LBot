@@ -6,6 +6,7 @@ from graia.ariadne.event.message import FriendMessage, GroupMessage, MessageEven
 from graia.saya.channel import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from aworda.lbot.permission import MasterPermission
+from aworda.lbot.function import LBotFunctionRegister
 
 import asyncio
 
@@ -15,7 +16,7 @@ channel = Channel.current()
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
-        inline_dispatchers=[MasterPermission("你想干什么，坏人!")],
+        inline_dispatchers=[LBotFunctionRegister("bot_manage",MasterPermission(),"干啥呢，坏蛋")],
         decorators=[DetectPrefix("#broadcast")],
     )
 )
