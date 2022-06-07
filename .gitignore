@@ -8,6 +8,8 @@ __pycache__/
 
 # Bot
 config.json
+config/
+resource/
 
 # Distribution / packaging
 .Python
