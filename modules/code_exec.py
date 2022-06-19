@@ -45,7 +45,7 @@ shell = Alconna(
     ListenerSchema(
         [GroupMessage, FriendMessage],
         inline_dispatchers=[
-            LBotFunctionRegister("code_exec", MasterPermission(), "啊嘞，好像权限不够嘞")
+            LBotFunctionRegister("code_exec", MasterPermission("啊嘞，好像权限不够嘞"))
         ],
     )
 )
@@ -85,6 +85,7 @@ async def _(
         else:
             return await app.sendMessage(sender, MessageChain.create("execute success"))
     except Exception as e:
+        raise e
         return await app.sendMessage(
             sender,
             MessageChain.create(
@@ -100,7 +101,7 @@ async def _(
     ListenerSchema(
         [GroupMessage, FriendMessage],
         inline_dispatchers=[
-            LBotFunctionRegister("shell_exec", MasterPermission(), "再这样下去，霖念会生气的💧💧")
+            LBotFunctionRegister("shell_exec", MasterPermission("再这样下去，霖念会生气的💧💧"))
         ],
     )
 )

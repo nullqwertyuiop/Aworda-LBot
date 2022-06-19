@@ -17,7 +17,9 @@ channel = Channel.current()
     ListenerSchema(
         [GroupMessage, FriendMessage],
         inline_dispatchers=[
-            LBotFunctionRegister("bot_manage", MasterPermission(), "干啥呢，坏蛋")
+            LBotFunctionRegister(
+                "bot_manage", MasterPermission(denied_message="干啥呢，坏蛋")
+            )
         ],
         decorators=[DetectPrefix("#broadcast")],
     )

@@ -14,7 +14,7 @@ font_file = "./resource/font/sarasa-mono-sc-nerd-light.ttf"
 try:
     font = ImageFont.truetype(font_file, 22)
 except OSError:
-    
+
     exit(1)
 cache = Path("./cache/t2i")
 cache.mkdir(exist_ok=True, parents=True)

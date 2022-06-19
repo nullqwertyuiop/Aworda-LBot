@@ -13,6 +13,12 @@ from typing import Optional
 
 
 class BasePermission:
+
+    denied_message: Optional[Union[str, MessageChain]] = None
+
+    def __init__(self, denied_message: Optional[Union[str, MessageChain]] = None):
+        self.denied_message = denied_message
+
     @abc.abstractmethod
     async def target(self, event: BaseEvent) -> bool:
         raise NotImplementedError()
@@ -24,7 +30,10 @@ class PermissionStatus:
 
 
 class PersonPermission(BasePermission):
-    def __init__(self, sender: int):
+    def __init__(
+        self, sender: int, denied_message: Optional[Union[str, MessageChain]] = None
+    ):
+        self.denied_message = denied_message
         self.sender = sender
 
     async def target(self, event: MessageEvent) -> bool:
@@ -32,8 +41,9 @@ class PersonPermission(BasePermission):
 
 
 class MasterPermission(PersonPermission):
-    def __init__(self):
+    def __init__(self, denied_message: Optional[Union[str, MessageChain]] = None):
         lbot = LBot.get_running()
+        self.denied_message = denied_message
         self.sender = lbot.config.bot.master
 
 
@@ -43,6 +53,9 @@ class Stop(BasePermission):
 
 
 class AllAllow(BasePermission):
+    def __init__(self):
+        pass
+
     async def target(self, event: BaseEvent) -> bool:
         return True
 
@@ -51,15 +64,11 @@ class PermissionDispatcher(BaseDispatcher):
     def __init__(
         self,
         permission: BasePermission,
-        denied_message: Optional[Union[str, MessageChain]] = None,
     ):
         """
         :param permission: 权限
-        :param denied_message: 拒绝消息 可以是字符串或者 MessageChain 可以不填入此时权限不足将会沉默 推荐在没有使用任何其他消息链处理器的情况下使用 alconna dispatcher 请启用 不继续执行模式
-        :param stop_message: 遇到 Stop Permission 将会抛出 ExecutionStop 异常 可以是字符串或者 MessageChain 可以不填入此时权限不足将会沉默 推荐在没有使用任何其他消息链处理器的情况下使用 alconna dispatcher 请启用 不继续执行模式
         """
         self.permission = permission
-        self.denied_message = denied_message
 
     async def afterDispatch(
         self,
@@ -67,14 +76,15 @@ class PermissionDispatcher(BaseDispatcher):
         exception: Optional[Exception],
         tb: Optional[TracebackType],
     ):
+        denied_message = self.permission.denied_message
         if await self.permission.target(interface.event):
             return interface
         else:
-            if self.denied_message:
-                if not isinstance(self.denied_message, MessageChain):
-                    self.denied_message = MessageChain.create(self.denied_message)
+            if denied_message:
+                if not isinstance(denied_message, MessageChain):
+                    denied_message = MessageChain.create(denied_message)
                 app = get_running()
-                await app.sendMessage(interface.event, self.denied_message)
+                await app.sendMessage(interface.event, denied_message)
             raise ExecutionStop()
 
     async def catch(self, interface: DispatcherInterface):

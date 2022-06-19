@@ -17,7 +17,7 @@ from graia.ariadne.message.element import (
     Source,
 )
 from aworda.lbot.function import LBotFunctionRegister
-from aworda.lbot.permission import Stop
+from aworda.lbot.permission import AllAllow, Stop
 from model import SignInInfo
 import random
 
@@ -44,7 +44,7 @@ hitokoto_url = "https://v1.hitokoto.cn/"
         decorators=[MatchContent("签到")],
         inline_dispatchers=[
             LBotFunctionRegister(
-                "signin", defualt_permission=Stop(), denied_message="啊嘞，签到好像停用了捏"
+                "signin", defualt_permission=AllAllow(), denied_message="啊嘞，签到好像停用了捏"
             )
         ],
     )
