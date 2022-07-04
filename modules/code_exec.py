@@ -80,7 +80,10 @@ async def _(
         code_res = data.get(output)
         if code_res is not None:
             return await app.sendMessage(
-                sender, MessageChain.create(f"{output}: {code_res}")
+                sender,
+                MessageChain.create(
+                    Image(data_bytes=await create_image(f"{output}: {code_res}"))
+                ),
             )
         else:
             return await app.sendMessage(sender, MessageChain.create("execute success"))
@@ -106,20 +109,16 @@ async def _(
     )
 )
 async def _(app: Ariadne, sender: Union[Group, Friend], result: AlconnaProperty):
-    try:
-        res = subprocess.run(
-            result.result.main_args["code"][0],
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        ).stdout.decode("utf-8")
-    except UnicodeDecodeError:
-        res = subprocess.run(
-            result.result.main_args["code"][0],
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        ).stdout.decode("gbk")
+    wait = await asyncio.create_subprocess_shell(
+        result.result.main_args["code"][0],
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    await wait.wait()
+    res = await wait.stdout.read()
+    res = res.decode("utf-8")
+
     await asyncio.sleep(0)
     return await app.sendMessage(
         sender,

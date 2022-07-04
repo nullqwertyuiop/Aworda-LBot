@@ -268,6 +268,19 @@ url = "https://mirrors.cloud.tencent.com/pypi/simple"
 reference = "txcloud"
 
 [[package]]
+name = "jieba"
+version = "0.42.1"
+description = "Chinese Words Segmentation Utilities"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.source]
+type = "legacy"
+url = "https://mirrors.cloud.tencent.com/pypi/simple"
+reference = "txcloud"
+
+[[package]]
 name = "loguru"
 version = "0.6.0"
 description = "Python logging made (stupidly) simple"
@@ -453,7 +466,7 @@ reference = "txcloud"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ac9746b58de69f73c42bdb9b3466a71fd0b85a4b9cfcc6c0f36cba4fe09053eb"
+content-hash = "b592819e1e88e966be2a41d0f1ca03f2c997fee9e437d0002c2eccd5003c9c3a"
 
 [metadata.files]
 aiofiles = [
@@ -644,6 +657,9 @@ graia-saya = [
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
+]
+jieba = [
+    {file = "jieba-0.42.1.tar.gz", hash = "sha256:055ca12f62674fafed09427f176506079bc135638a14e23e25be909131928db2"},
 ]
 loguru = [
     {file = "loguru-0.6.0-py3-none-any.whl", hash = "sha256:4e2414d534a2ab57573365b3e6d0234dfb1d84b68b7f3b948e6fb743860a77c3"},
