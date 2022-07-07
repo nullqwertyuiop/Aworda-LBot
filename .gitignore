@@ -9,7 +9,6 @@ __pycache__/
 # Bot
 config.json
 config/
-resource/
 cache
 
 # Distribution / packaging

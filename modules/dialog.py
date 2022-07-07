@@ -17,7 +17,7 @@ import jieba
 
 channel = Channel.current()
 
-ILLNESS = ["疼","痛"]
+ILLNESS = ["疼", "痛"]
 
 
 @channel.use(
