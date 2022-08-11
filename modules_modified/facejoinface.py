@@ -29,12 +29,10 @@ async def face_join_face(img1: str, img2: str):
             if resp.status == 200:
                 resp_json = await resp.json()
                 result_bytes = base64.b64decode(resp_json["result"])
-                return MessageChain.create("转基因成功()", Image(data_bytes=result_bytes))
+                return MessageChain("转基因成功()", Image(data_bytes=result_bytes))
             else:
                 resp_json = await resp.json()
-                return MessageChain.create(
-                    f"转基因失败惹()\n好像是因为{resp_json['error_message']}"
-                )
+                return MessageChain(f"转基因失败惹()\n好像是因为{resp_json['error_message']}")
 
 
 @channel.use(
@@ -46,13 +44,11 @@ async def face_join_face(img1: str, img2: str):
 )
 async def facepp(app: Ariadne, group: Group, chain: MessageChain, source: Source):
     if not len(chain.get(Image)) == 2:
-        await app.sendGroupMessage(
-            group, MessageChain.create("噫，你倒是发两张图片啊"), quote=source
-        )
+        await app.send_group_message(group, MessageChain("噫，你倒是发两张图片啊"), quote=source)
         return
     img1: str = chain.get(Image)[0].url
     img2: str = chain.get(Image)[1].url
-    await app.sendGroupMessage(
+    await app.send_group_message(
         group,
         await face_join_face(img1, img2),
         quote=source,

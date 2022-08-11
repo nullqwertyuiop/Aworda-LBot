@@ -23,9 +23,9 @@ channel = Channel.current()
 )
 async def facepp(app: Ariadne, group: Group, source: Source):
     async with aiohttp.ClientSession() as session:
-        await app.sendGroupMessage(
+        await app.send_group_message(
             group,
-            MessageChain.create(
+            MessageChain(
                 "你要的 kemomimi 图来啦!",
                 Image(
                     url=f"https://brx86.gitee.io/kemomimi/{random.randint(0,581)}.jpg"

@@ -1,12 +1,12 @@
 from typing import List
 from pydantic import BaseModel
-from graia.ariadne.model import MiraiSession
 from pathlib import Path
 from loguru import logger
 import json
 
 
 class BotConfig(BaseModel):
+    account: int = 114514
     master: int = 0
     master_promission_denied: str = "坏人，你没有权限！"
     admins: List[int] = []
@@ -18,12 +18,13 @@ class DataBaseConfig(BaseModel):
     database: str = "AwordaLBot"
 
 
+class MiraiConfig(BaseModel):
+    host: str = "http://localhost:8080"
+    verify_key: str = "hhhhhhhhh"
+
+
 class AwordaConfig(BaseModel):
-    mirai: MiraiSession = MiraiSession(
-        host="http://localhost:8080",
-        verify_key="",
-        account=123456789,
-    )
+    mirai: MiraiConfig = MiraiConfig()
     bot: BotConfig = BotConfig()
     db: DataBaseConfig = DataBaseConfig()
 

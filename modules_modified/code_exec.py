@@ -1,4 +1,5 @@
 # coding: utf-8
+from os import sendfile
 import traceback
 import subprocess
 import asyncio
@@ -25,22 +26,22 @@ channel = Channel.current()
 
 code = Alconna(
     "执行",
-    Args["code;S":str],
+    Args["code;S", str],
     headers=["#"],
-    options=[Option("out", Args["name;O":str:"res"])],
+    options=[Option("out", Args["name;O", str, "res"])],
     help_text=f"执行简易代码 Example: #执行 print(1+1);",
 )
 
 shell = Alconna(
     "shell",
-    Args["code":AllParam],
+    Args["code", AllParam],
     headers=["#"],
     help_text=f"执行命令行语句 Example: #shell echo hello;",
     is_fuzzy_match=True,
 )
 
 
-@channel.use(AlconnaSchema(AlconnaDispatcher(alconna=code, help_flag="reply")))
+@channel.use(AlconnaSchema(AlconnaDispatcher(command=code, send_flag="reply")))
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
@@ -56,15 +57,13 @@ async def _(
     result: AlconnaProperty,
 ):
     arp = result.result
-    codes = message.asDisplay().split("\n")
+    codes = message.display.split("\n")
     output = arp.query("out.name", "res")
     if len(codes) == 1:
         return
     for _code in codes[1:]:
         if "exit(" in _code or "os." in _code or "system(" in _code:
-            return await app.sendMessage(
-                sender, MessageChain.create("Execution terminated")
-            )
+            return await app.send_message(sender, MessageChain("Execution terminated"))
     lcs = {}
     try:
         exec(
@@ -79,19 +78,19 @@ async def _(
         data = await lcs["rc"]()
         code_res = data.get(output)
         if code_res is not None:
-            return await app.sendMessage(
+            return await app.send_message(
                 sender,
-                MessageChain.create(
+                MessageChain(
                     Image(data_bytes=await create_image(f"{output}: {code_res}"))
                 ),
             )
         else:
-            return await app.sendMessage(sender, MessageChain.create("execute success"))
+            return await app.send_message(sender, MessageChain("execute success"))
     except Exception as e:
         raise e
-        return await app.sendMessage(
+        return await app.send_message(
             sender,
-            MessageChain.create(
+            MessageChain(
                 "\n".join(
                     traceback.format_exception(e.__class__, e, e.__traceback__, limit=1)
                 )
@@ -99,7 +98,7 @@ async def _(
         )
 
 
-@channel.use(AlconnaSchema(AlconnaDispatcher(alconna=shell, help_flag="reply")))
+@channel.use(AlconnaSchema(AlconnaDispatcher(command=shell, send_flag="reply")))
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
@@ -120,7 +119,7 @@ async def _(app: Ariadne, sender: Union[Group, Friend], result: AlconnaProperty)
     res = res.decode("utf-8")
 
     await asyncio.sleep(0)
-    return await app.sendMessage(
+    return await app.send_message(
         sender,
-        MessageChain.create(Image(data_bytes=(await create_image(res, cut=120)))),
+        MessageChain(Image(data_bytes=(await create_image(res, cut=120)))),
     )

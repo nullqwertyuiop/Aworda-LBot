@@ -1,5 +1,10 @@
 from graia.ariadne.app import Ariadne
 from graia.broadcast import Broadcast
+from graia.ariadne.connection.config import (
+    HttpClientConfig,
+    WebsocketClientConfig,
+    config as AriadneConfig,
+)
 from motor.motor_asyncio import AsyncIOMotorClient
 from .config import AwordaConfig
 from contextvars import ContextVar
@@ -12,7 +17,14 @@ class LBot:
         self, broadcast: Broadcast = Broadcast(), config_path: str = "config.json"
     ):
         self.config = AwordaConfig.from_json_file(config_path)
-        self.app = Ariadne(self.config.mirai, broadcast=broadcast)
+        self.app = Ariadne(
+            connection=AriadneConfig(
+                self.config.bot.account,
+                self.config.mirai.verify_key,
+                HttpClientConfig(self.config.mirai.host),
+                WebsocketClientConfig(self.config.mirai.host),
+            )
+        )
         self.context = context.set(self)
         self.loop = broadcast.loop
         self.broadcast = broadcast

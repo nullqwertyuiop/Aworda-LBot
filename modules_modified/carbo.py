@@ -27,9 +27,9 @@ async def facepp(app: Ariadne, group: Group, source: Source):
     async with aiofiles.open("./resource/carbo.json") as f:
         data = ujson.loads(await f.read())
         url = random.choice(data["urls"])
-        await app.sendGroupMessage(
+        await app.send_group_message(
             group,
-            MessageChain.create(
+            MessageChain(
                 "你要的猫猫虫图来啦!",
                 Image(url=url),
             ),

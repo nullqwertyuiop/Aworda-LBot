@@ -39,7 +39,7 @@ async def rua(
     group: Group,
     msg: MessageChain,
 ):
-    if msg.asDisplay().startswith("搓搓") or msg.asDisplay().endswith("搓搓"):
+    if msg.display.startswith("搓搓") or msg.display.endswith("搓搓"):
         if msg.has(At):
             qid = msg.get(At)[0].target
         elif msg.startswith("搓搓"):
@@ -51,4 +51,4 @@ async def rua(
 
         data = await ruaer(qid)
         ph = Image(data_bytes=data)
-        await app.sendGroupMessage(group, MessageChain.create([ph]))
+        await app.send_group_message(group, MessageChain([ph]))

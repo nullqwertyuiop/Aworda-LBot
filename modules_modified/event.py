@@ -31,7 +31,7 @@ async def group_message_listener(
     await GroupHistoryMessage(
         group=group.id,
         sender=member.id,
-        message=msg.asPersistentString(),
+        message=msg.as_persistent_string(),
         time=datetime.now(),
     ).insert()
     logger.success("[DataBase] Message have been saved")
@@ -46,7 +46,7 @@ async def friend_message_listener(
     msg: MessageChain, friend: Friend, db: PrivateHistoryMessage
 ):
     await PrivateHistoryMessage(
-        sender=friend.id, message=msg.asPersistentString(), time=datetime.now()
+        sender=friend.id, message=msg.as_persistent_string(), time=datetime.now()
     ).insert()
     logger.success("[DataBase] Message have been saved")
 
@@ -73,7 +73,7 @@ async def make_msg_for_unknow_exception(event):
         + f"\n异常追踪：\n{tb}"
     )
     image = await create_image(msg)
-    return MessageChain.create([Plain("发生未捕获的异常\n"), Image(data_bytes=image)])
+    return MessageChain([Plain("发生未捕获的异常\n"), Image(data_bytes=image)])
 
 
 @channel.use(ListenerSchema([ExceptionThrowed]))
@@ -81,7 +81,7 @@ async def except_handle(app: Ariadne, event: ExceptionThrowed):
     if isinstance(event.exception, IndexError):
         return
     if isinstance(event.event, MessageEvent):
-        source = event.event.messageChain.getFirst(Source)
-        await app.sendMessage(
+        source = event.event.message_chain.get_first(Source)
+        await app.send_message(
             event.event, await make_msg_for_unknow_exception(event), quote=source
         )

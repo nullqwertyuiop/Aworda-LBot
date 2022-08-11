@@ -52,7 +52,7 @@ hitokoto_url = "https://v1.hitokoto.cn/"
 async def sendmsg(
     app: Ariadne, msg: MessageChain, group: Group, member: Member, db: SignInInfo
 ):
-    message_id = msg.getFirst(Source).id
+    message_id = msg.get_first(Source).id
     try:
         info = await SignInInfo.find(SignInInfo.user == member.id).to_list()
         info = info[0]
@@ -71,11 +71,11 @@ async def sendmsg(
         info.last_time.day >= datetime.datetime.now().day
         and info.last_time.month == datetime.datetime.now().month
     ):
-        await app.sendGroupMessage(
-            group, MessageChain.create([Text("噫，你今天签了到了")]), quote=message_id
+        await app.send_group_message(
+            group, MessageChain([Text("噫，你今天签了到了")]), quote=message_id
         )
         return
-    avatar = await member.getAvatar()
+    avatar = await member.get_avatar()
     favorability = str(info.favorability + random.randint(10, 30))
     signin_frame = SignInFrameWork(
         member.id,
@@ -109,9 +109,9 @@ async def sendmsg(
         )
         return result.get_bytes()
 
-    await app.sendGroupMessage(
+    await app.send_group_message(
         group,
-        MessageChain.create(
+        MessageChain(
             [
                 IMG(data_bytes=await asyncio.to_thread(sign_in, signin_frame)),
             ]

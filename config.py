@@ -1,3 +1,4 @@
+import imp
 from pydantic import BaseModel
 import contextvars
 from loguru import logger
@@ -13,6 +14,7 @@ class FacePPConfig(BaseModel):
 
 class ApiConfigs(BaseModel):
     facepp: FacePPConfig = FacePPConfig()
+    ai: str = ""
 
     @classmethod
     def from_file(cls, config_file):
@@ -30,7 +32,6 @@ def init_configs(config_file):
     configs = ApiConfigs.from_file(config_file)
     logger.success(f"Configs loaded")
     config_context.set(configs)
-    input()
     logger.success(f"Configs global variable set")
 
 

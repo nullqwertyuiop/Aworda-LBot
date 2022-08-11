@@ -7,7 +7,7 @@ from graia.broadcast.entities.event import BaseEvent
 from graia.broadcast.interfaces.dispatcher import DispatcherInterface
 from graia.ariadne.event.message import MessageEvent
 from graia.broadcast.exceptions import ExecutionStop
-from graia.ariadne import get_running
+from graia.ariadne import Ariadne
 from . import LBot
 from typing import Optional
 
@@ -82,9 +82,9 @@ class PermissionDispatcher(BaseDispatcher):
         else:
             if denied_message:
                 if not isinstance(denied_message, MessageChain):
-                    denied_message = MessageChain.create(denied_message)
-                app = get_running()
-                await app.sendMessage(interface.event, denied_message)
+                    denied_message = MessageChain(denied_message)
+                app = Ariadne.current()
+                await app.send_message(interface.event, denied_message)
             raise ExecutionStop()
 
     async def catch(self, interface: DispatcherInterface):
