@@ -76,6 +76,30 @@ async def get_reply(text: str, group: int):
             return (await r.json())["result"]
 
 
+# 急了防止对策
+WORDMATCHER = ["操", "艹", "你妈", "fuck", "傻逼", "弱智"]
+method_mui = ["急了？别急，你先别急", "急了急了，什么急急国王", "举办喵，举办谢谢喵", "破防了捏，我火速举办", "鉴定为说藏话了，别急捏"]
+
+
+@channel.use(
+    ListenerSchema(
+        [GroupMessage], inline_dispatchers=[LBotFunctionRegister("be_patient")]
+    )
+)
+async def be_patient(
+    app: Ariadne, group: Group, source: Source, msg: MessageChain, member: Member
+):
+    words = jieba.lcut(msg.display)
+    for i in WORDMATCHER:
+        if i in words:
+            await app.send_group_message(
+                group,
+                MessageChain(At(member.id), Plain(random.choice(method_mui))),
+                quote=source,
+            )
+            break
+
+
 class LuckyNumber(Document):
     group: int
     lucky: int
