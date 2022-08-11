@@ -1,4 +1,5 @@
 from time import sleep
+from graia.ariadne.model.relationship import MemberPerm
 from loguru import logger
 from typing import Dict
 from graia.ariadne import Ariadne
@@ -102,8 +103,7 @@ async def touchfish(
     unsure: LuckyNumber,
 ):
     if msg.display.startswith("#调整概率") and (
-        member.permission == "ADMINISTRATOR"
-        or member.permission == "OWNER"
+        member.permission > MemberPerm.Member
         or member.id == LBot.get_running().config.bot.master
     ):
         random_max = int(msg.removeprefix("#调整概率").display)

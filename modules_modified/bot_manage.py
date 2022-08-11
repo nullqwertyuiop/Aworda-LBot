@@ -43,7 +43,7 @@ async def broadcast(app: Ariadne, event: MessageEvent, chain: MessageChain):
         try:
             await app.send_group_message(group, msg)
         except Exception as e:
-            unsend_group[group] = str(e)
+            unsend_group[group.id] = str(e)
         await asyncio.sleep(sleep_time)
     await app.send_message(event, MessageChain(f"广播完成"))
     await app.send_message(
