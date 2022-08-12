@@ -647,7 +647,7 @@ reference = "txcloud"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "fc142cfa617f138d20c1f509985526ef1aa9b6ff44c28ce749b04a48af376723"
+content-hash = "53fdb81a67607cc63baa06e719f3b666384a715b52eab8a190b056532192a536"
 
 [metadata.files]
 aiofiles = [

@@ -9,7 +9,7 @@ from PIL import Image, ImageFont, ImageDraw
 
 from .strings import get_cut_str
 
-font_file = "./resource/font/sarasa-mono-sc-nerd-light.ttf"
+font_file = "resource/font/sarasa-mono-sc-nerd-light.ttf"
 # font_file = "./font/NotoColorEmoji.ttf"
 try:
     font = ImageFont.truetype(font_file, 22)
