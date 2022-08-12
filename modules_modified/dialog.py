@@ -71,7 +71,7 @@ async def fuck_null(app: Ariadne, group: Group):
 async def get_reply(text: str, group: int, member: int):
     async with aiohttp.ClientSession() as s:
         async with s.get(
-            get_config().ai, params={"text": text, "session": f"{group}/{member}"}
+            get_config().ai, params={"text": text, "session": f"{group}%20{member}"}
         ) as r:
             return (await r.json())["result"]
 
