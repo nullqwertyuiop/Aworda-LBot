@@ -68,10 +68,10 @@ async def fuck_null(app: Ariadne, group: Group):
     )
 
 
-async def get_reply(text: str, group: int):
+async def get_reply(text: str, group: int, member: int):
     async with aiohttp.ClientSession() as s:
         async with s.get(
-            get_config().ai, params={"text": text, "session": str(group)}
+            get_config().ai, params={"text": text, "session": f"{group}/{member}"}
         ) as r:
             return (await r.json())["result"]
 
@@ -89,6 +89,7 @@ method_mui = ["急了？别急，你先别急", "急了急了，什么急急国�
 async def be_patient(
     app: Ariadne, group: Group, source: Source, msg: MessageChain, member: Member
 ):
+    jieba.load_userdict("./resource/wordmatcher.txt")
     words = jieba.lcut(msg.display)
     for i in WORDMATCHER:
         if i in words:
@@ -156,7 +157,9 @@ async def touchfish(
         if msg.get_first(At).target == app.account:
             text = msg.get_first(Plain).text
             await app.send_group_message(
-                group, MessageChain(await get_reply(text, group.id)), quote=source
+                group,
+                MessageChain(await get_reply(text, group.id, member.id)),
+                quote=source,
             )
     if msg.has(Plain):
         if not len(msg) == 2:
@@ -169,5 +172,7 @@ async def touchfish(
         if dice(lucky):
             text = msg.display
             await app.send_group_message(
-                group, MessageChain(await get_reply(text, group.id)), quote=source
+                group,
+                MessageChain(await get_reply(text, group.id, member.id)),
+                quote=source,
             )
